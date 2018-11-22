@@ -1,0 +1,140 @@
+{% extends "stark/base.html" %}
+{% block page-main %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h4 style="display: inline-block">数据详情</h4>
+                        <a href="{{ add_url }}">
+                            <button class="btn btn-lg btn-success pull-right">添加数据</button>
+                        </a>
+                    </div>
+                    <div class="panel-body">
+                        <!---搜索栏 开始------>
+                        {% if listview_obj.config_obj.search_fields %}
+                            <form role="form" method="get" action="">
+                                <div class="col-lg-5 pull-right">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="tj">
+                                        <span class="input-group-btn">
+                                <button class="btn btn-info">搜索</button>
+                                </span>
+                                    </div>
+                                </div><!-- /.row -->
+                            </form>
+                        {% endif %}
+                        <!---搜索栏 结束------>
+
+                        <form action="" method="post" role="form">
+                            {% csrf_token %}
+                            <!----action栏--开始------->
+                            <div style="width: 304px;margin-bottom: 20px">
+                                <div class="input-group">
+                                    <select name="action" class="form-control"
+                                            style="display: inline-block;width: 250px">
+                                        <option>---------</option>
+                                        {% for action in listview_obj.actions_list %}
+                                            <option value="{{ action.action }}">{{ action.desc }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <span class="input-group-btn">
+                                <button class="btn btn-info pull-right">提交</button>
+                                </span>
+                                </div>
+                            </div>
+                            <!----action栏--结束------->
+                            <div id="error-hint" style="background-color: rgba(255,176,38,0.49)">
+                                <span class="text-center">
+                                    {% if code == 1 %}
+                                        <h4 style="color: red">所选操作为空!!!</h4>
+                                    {% endif %}
+                                </span>
+                            </div>
+
+                            <!---数据栏  开始----->
+                            <table class="table table-hover table-striped table-condensed">
+                                <thead>
+                                <tr>
+                                    {% for head in listview_obj.create_head %}
+                                        <td><h4>{{ head }}</h4></td>
+                                    {% endfor %}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for obj in obj_list %}
+                                    <tr>
+                                        {% for field in obj %}
+                                            <td>
+                                                {{ field }}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                {% empty %}
+                                    <td class="text-center" colspan="{{ listview_obj.create_head|length }}"
+                                        style="background-color: antiquewhite ;color: green;"><h4>空空如也！！！</h4></td>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <!---数据栏  结束----->
+                        </form>
+                    </div>
+                </div>
+                {{ page_html|safe }}
+                <!------模态框开始-------->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                     aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                                </button>
+                                <h4 class="modal-title" id="myModalLabel">确认删除</h4>
+                            </div>
+                            <div class="modal-body">您确定要删除所选的数据吗？？？</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <a id="del-success">
+                                    <button type="button" class="btn btn-primary">删除</button>
+                                </a>
+                            </div>
+                        </div><!-- /.modal-content -->
+                    </div><!-- /.modal -->
+                </div>
+                <!------模态框结束-------->
+            </div>
+            <!--filter 开始----->
+            <div class="col-md-2">
+                {% for filter_field,links in listview_obj.filter_field_links.items %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            {{ filter_field|upper }}
+                        </div>
+                        <div class="panel-body">
+                            {% for link in links %}
+                                <p>{{ link|safe }}</p>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <!--filter 结束----->
+        </div>
+    </div>
+{% endblock %}
+{% block page-js %}
+    <script>
+        $(function () {
+            //模态框确认按钮
+            $(".delete-link").click(function () {
+                var url = $(this).attr('url');
+                $("#del-success").attr("href", url)
+            });
+
+            $(document).click(function () {
+                $("#error-hint").attr('class', 'hide')
+            })
+        });</script>
+{% endblock %}
+

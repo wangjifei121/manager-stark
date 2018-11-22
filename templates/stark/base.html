@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人数据管理中心</title>
+    <link rel="stylesheet" href="/static/css/mycss.css">
+    <script src="/static/js/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7/css/bootstrap.css">
+    <script src="/static/bootstrap-3.3.7/js/bootstrap.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-inverse" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="javascript:void(0)">个人数据管理中心</a>
+        </div>
+        <div>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    用户操作
+                </div>
+                <div class="panel-body">
+                    {% for menu_dict in request.session.permissions__menu_list %}
+                        <div style="margin: 10px 0">
+                            <a href="{{ menu_dict.url }}">
+                                <button class="btn btn-success">{{ menu_dict.title }}</button>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            {% block page-main %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% block page-js %}
+{% endblock %}
+
+</body>
+</html>

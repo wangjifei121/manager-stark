@@ -1,0 +1,28 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>修改数据</h4>
+                </div>
+                <div class="panel-body">
+                    <form action="" method="post" novalidate>
+                        {% csrf_token %}
+                        {% for field in form_obj %}
+                            <div class="form-group">
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                <span class="error pull-right" style="color: red">{{ field.errors.0 }}</span>
+                                {% if field.is_pop %}
+                                    <a class="pop-item" href="javascript:void(0)"
+                                       onclick="pop('{{ field.url }}','{{ field.pop_back_id }}')">+</a>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <input type="submit" class="btn btn-success">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
